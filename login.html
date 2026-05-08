@@ -142,7 +142,7 @@
   <div class="divider">or</div>
 
   <div class="toggle-link" id="toggle-wrap">
-    Don't have an account?
+    <span id="toggle-text">Don't have an account?</span>
     <button type="button" id="toggle-btn">Create one</button>
   </div>
 </div>
@@ -155,54 +155,60 @@
 
   // If already logged in, go straight to the app
   const { data: { session } } = await supabase.auth.getSession();
-  if (session) location.replace('index.html');
+  if (session) { location.replace('index.html'); }
 
-  // ── State ──────────────────────────────────────────────
-  let isSignUp = false;
-
+  // ── DOM refs ────────────────────────────────────────────
   const formTitle    = document.getElementById('form-title');
   const formSubtitle = document.getElementById('form-subtitle');
   const btnLabel     = document.getElementById('btn-label');
   const btnSpinner   = document.getElementById('btn-spinner');
   const submitBtn    = document.getElementById('submit-btn');
   const toggleBtn    = document.getElementById('toggle-btn');
-  const toggleWrap   = document.getElementById('toggle-wrap');
+  const toggleText   = document.getElementById('toggle-text');
   const messageEl    = document.getElementById('message');
   const emailInput   = document.getElementById('email');
   const passInput    = document.getElementById('password');
 
-  // ── Toggle sign-in / sign-up ───────────────────────────
+  // ── State ───────────────────────────────────────────────
+  let isSignUp = false;
+
+  // ── Toggle between Sign In / Create Account ─────────────
   toggleBtn.addEventListener('click', () => {
     isSignUp = !isSignUp;
-    formTitle.textContent    = isSignUp ? 'Create account'         : 'Welcome back';
-    formSubtitle.textContent = isSignUp ? 'Enter your email and choose a password.' : 'Sign in to manage your inventory.';
-    btnLabel.textContent     = isSignUp ? 'Create Account'         : 'Sign In';
-    toggleWrap.innerHTML     = isSignUp
-      ? `Already have an account? <button type="button" id="toggle-btn">Sign in</button>`
-      : `Don't have an account? <button type="button" id="toggle-btn">Create one</button>`;
-    document.getElementById('toggle-btn').addEventListener('click', toggleBtn.onclick || (() => {}));
-    // Re-attach after innerHTML reset
-    document.getElementById('toggle-btn').addEventListener('click', () => toggleBtn.click());
+    formTitle.textContent    = isSignUp ? 'Create account'                       : 'Welcome back';
+    formSubtitle.textContent = isSignUp ? 'Choose an email and password.'        : 'Sign in to manage your inventory.';
+    btnLabel.textContent     = isSignUp ? 'Create Account'                       : 'Sign In';
+    toggleText.textContent   = isSignUp ? 'Already have an account?'             : "Don't have an account?";
+    toggleBtn.textContent    = isSignUp ? 'Sign in instead'                      : 'Create one';
+    passInput.autocomplete   = isSignUp ? 'new-password'                         : 'current-password';
     clearMsg();
+    emailInput.focus();
   });
 
-  // ── Form submit ────────────────────────────────────────
+  // ── Form submit ─────────────────────────────────────────
   document.getElementById('auth-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const email    = emailInput.value.trim();
     const password = passInput.value;
 
-    if (!email || !password) { showMsg('Please fill in all fields.', 'error'); return; }
-    if (password.length < 6)  { showMsg('Password must be at least 6 characters.', 'error'); return; }
+    if (!email)           { showMsg('Please enter your email.', 'error'); return; }
+    if (!password)        { showMsg('Please enter a password.', 'error'); return; }
+    if (password.length < 6) { showMsg('Password must be at least 6 characters.', 'error'); return; }
 
     setLoading(true);
     clearMsg();
 
     if (isSignUp) {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await supabase.auth.signUp({ email, password });
       setLoading(false);
       if (error) { showMsg(error.message, 'error'); return; }
-      showMsg('Account created! Check your email to confirm, then sign in.', 'success');
+      // If email confirmation is off in Supabase, user is logged in immediately
+      if (data.session) {
+        location.replace('index.html');
+      } else {
+        showMsg('✓ Account created! Check your email to confirm, then sign in.', 'success');
+      }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       setLoading(false);
@@ -211,6 +217,7 @@
     }
   });
 
+  // ── Helpers ─────────────────────────────────────────────
   function setLoading(on) {
     btnLabel.classList.toggle('hidden', on);
     btnSpinner.classList.toggle('hidden', !on);
@@ -221,24 +228,9 @@
     messageEl.className = 'message ' + type;
   }
   function clearMsg() {
-    messageEl.className = 'message';
     messageEl.textContent = '';
+    messageEl.className = 'message';
   }
-
-  // Re-wire toggle after innerHTML swap
-  (function rewire() {
-    document.getElementById('toggle-btn').addEventListener('click', () => {
-      isSignUp = !isSignUp;
-      formTitle.textContent    = isSignUp ? 'Create account' : 'Welcome back';
-      formSubtitle.textContent = isSignUp ? 'Enter your email and choose a password.' : 'Sign in to manage your inventory.';
-      btnLabel.textContent     = isSignUp ? 'Create Account' : 'Sign In';
-      toggleWrap.innerHTML     = isSignUp
-        ? `Already have an account? <button type="button" id="toggle-btn">Sign in</button>`
-        : `Don't have an account? <button type="button" id="toggle-btn">Create one</button>`;
-      rewire();
-      clearMsg();
-    });
-  })();
 </script>
 </body>
 </html>
