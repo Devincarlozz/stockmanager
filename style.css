@@ -121,6 +121,25 @@ svg { display: block; }
 .status-dot.connected { background: var(--green); }
 .status-dot.error     { background: var(--red); }
 
+.sidebar-footer { display: flex; flex-direction: column; gap: .5rem; }
+.user-info {
+  display: flex; align-items: center; gap: .45rem;
+  font-size: .78rem; color: var(--text-2);
+  padding-bottom: .5rem; border-bottom: 1px solid var(--border);
+}
+.user-info svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--text-3); }
+.user-email {
+  flex: 1; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; font-size: .76rem;
+}
+.logout-btn {
+  margin-left: auto; padding: .2rem .3rem;
+  border-radius: 4px; color: var(--text-3);
+  transition: background .12s, color .12s;
+}
+.logout-btn:hover { background: var(--red-lt); color: var(--red); }
+.logout-btn svg { width: 14px; height: 14px; }
+
 /* ── MAIN ────────────────────────────────────────────── */
 .main {
   margin-left: var(--sidebar-w);

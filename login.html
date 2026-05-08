@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StockIQ — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 15px; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f4f5f7;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .auth-card {
+      background: #fff;
+      border: 1px solid #e2e5ea;
+      border-radius: 14px;
+      padding: 2.25rem 2rem;
+      width: 100%; max-width: 400px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    }
+
+    .brand {
+      display: flex; align-items: center; gap: .65rem;
+      margin-bottom: 1.75rem;
+    }
+    .brand-icon {
+      width: 36px; height: 36px; background: #2563eb;
+      border-radius: 9px; display: grid; place-items: center;
+    }
+    .brand-icon svg { width: 18px; height: 18px; color: #fff; }
+    .brand-name { font-size: 1.1rem; font-weight: 700; color: #1a1d23; }
+
+    h2 { font-size: 1.2rem; font-weight: 700; color: #1a1d23; margin-bottom: .35rem; }
+    .subtitle { font-size: .85rem; color: #5a6070; margin-bottom: 1.5rem; }
+
+    .field { display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1rem; }
+    label { font-size: .8rem; font-weight: 600; color: #5a6070; }
+    input {
+      padding: .7rem .85rem; border: 1px solid #e2e5ea;
+      border-radius: 7px; font-size: .95rem; font-family: inherit;
+      color: #1a1d23; outline: none;
+      transition: border-color .12s, box-shadow .12s;
+    }
+    input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+    }
+
+    .btn {
+      width: 100%; padding: .75rem; border-radius: 7px;
+      font-size: .95rem; font-weight: 700; font-family: inherit;
+      cursor: pointer; border: none; margin-top: .5rem;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      transition: background .12s;
+    }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+
+    .divider {
+      text-align: center; margin: 1.1rem 0;
+      font-size: .8rem; color: #9ba3b0; position: relative;
+    }
+    .divider::before, .divider::after {
+      content: ''; position: absolute; top: 50%;
+      width: 42%; height: 1px; background: #e2e5ea;
+    }
+    .divider::before { left: 0; }
+    .divider::after  { right: 0; }
+
+    .toggle-link {
+      text-align: center; font-size: .83rem; color: #5a6070; margin-top: 1rem;
+    }
+    .toggle-link button {
+      background: none; border: none; color: #2563eb;
+      font-weight: 600; cursor: pointer; font-size: .83rem;
+      padding: 0; text-decoration: underline;
+    }
+
+    .message {
+      padding: .65rem .85rem; border-radius: 7px;
+      font-size: .82rem; font-weight: 600; margin-top: .75rem;
+      display: none;
+    }
+    .message.error   { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; display: block; }
+    .message.success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; display: block; }
+
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hidden { display: none !important; }
+
+    @media (max-width: 480px) {
+      .auth-card { padding: 1.75rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-card">
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="brand-name">StockIQ</span>
+  </div>
+
+  <h2 id="form-title">Welcome back</h2>
+  <p class="subtitle" id="form-subtitle">Sign in to manage your inventory.</p>
+
+  <form id="auth-form" novalidate>
+    <div class="field">
+      <label for="email">Email address</label>
+      <input type="email" id="email" placeholder="you@example.com" autocomplete="email" required />
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="submit-btn">
+      <span id="btn-label">Sign In</span>
+      <span class="spinner hidden" id="btn-spinner"></span>
+    </button>
+
+    <div class="message" id="message"></div>
+  </form>
+
+  <div class="divider">or</div>
+
+  <div class="toggle-link" id="toggle-wrap">
+    Don't have an account?
+    <button type="button" id="toggle-btn">Create one</button>
+  </div>
+</div>
+
+<script type="module">
+  import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // If already logged in, go straight to the app
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) location.replace('index.html');
+
+  // ── State ──────────────────────────────────────────────
+  let isSignUp = false;
+
+  const formTitle    = document.getElementById('form-title');
+  const formSubtitle = document.getElementById('form-subtitle');
+  const btnLabel     = document.getElementById('btn-label');
+  const btnSpinner   = document.getElementById('btn-spinner');
+  const submitBtn    = document.getElementById('submit-btn');
+  const toggleBtn    = document.getElementById('toggle-btn');
+  const toggleWrap   = document.getElementById('toggle-wrap');
+  const messageEl    = document.getElementById('message');
+  const emailInput   = document.getElementById('email');
+  const passInput    = document.getElementById('password');
+
+  // ── Toggle sign-in / sign-up ───────────────────────────
+  toggleBtn.addEventListener('click', () => {
+    isSignUp = !isSignUp;
+    formTitle.textContent    = isSignUp ? 'Create account'         : 'Welcome back';
+    formSubtitle.textContent = isSignUp ? 'Enter your email and choose a password.' : 'Sign in to manage your inventory.';
+    btnLabel.textContent     = isSignUp ? 'Create Account'         : 'Sign In';
+    toggleWrap.innerHTML     = isSignUp
+      ? `Already have an account? <button type="button" id="toggle-btn">Sign in</button>`
+      : `Don't have an account? <button type="button" id="toggle-btn">Create one</button>`;
+    document.getElementById('toggle-btn').addEventListener('click', toggleBtn.onclick || (() => {}));
+    // Re-attach after innerHTML reset
+    document.getElementById('toggle-btn').addEventListener('click', () => toggleBtn.click());
+    clearMsg();
+  });
+
+  // ── Form submit ────────────────────────────────────────
+  document.getElementById('auth-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email    = emailInput.value.trim();
+    const password = passInput.value;
+
+    if (!email || !password) { showMsg('Please fill in all fields.', 'error'); return; }
+    if (password.length < 6)  { showMsg('Password must be at least 6 characters.', 'error'); return; }
+
+    setLoading(true);
+    clearMsg();
+
+    if (isSignUp) {
+      const { error } = await supabase.auth.signUp({ email, password });
+      setLoading(false);
+      if (error) { showMsg(error.message, 'error'); return; }
+      showMsg('Account created! Check your email to confirm, then sign in.', 'success');
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      setLoading(false);
+      if (error) { showMsg(error.message, 'error'); return; }
+      location.replace('index.html');
+    }
+  });
+
+  function setLoading(on) {
+    btnLabel.classList.toggle('hidden', on);
+    btnSpinner.classList.toggle('hidden', !on);
+    submitBtn.disabled = on;
+  }
+  function showMsg(text, type) {
+    messageEl.textContent = text;
+    messageEl.className = 'message ' + type;
+  }
+  function clearMsg() {
+    messageEl.className = 'message';
+    messageEl.textContent = '';
+  }
+
+  // Re-wire toggle after innerHTML swap
+  (function rewire() {
+    document.getElementById('toggle-btn').addEventListener('click', () => {
+      isSignUp = !isSignUp;
+      formTitle.textContent    = isSignUp ? 'Create account' : 'Welcome back';
+      formSubtitle.textContent = isSignUp ? 'Enter your email and choose a password.' : 'Sign in to manage your inventory.';
+      btnLabel.textContent     = isSignUp ? 'Create Account' : 'Sign In';
+      toggleWrap.innerHTML     = isSignUp
+        ? `Already have an account? <button type="button" id="toggle-btn">Sign in</button>`
+        : `Don't have an account? <button type="button" id="toggle-btn">Create one</button>`;
+      rewire();
+      clearMsg();
+    });
+  })();
+</script>
+</body>
+</html>

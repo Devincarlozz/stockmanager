@@ -14,6 +14,18 @@ async function initSupabase() {
     'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
   );
   supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // ── Auth guard: redirect to login if not signed in
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    location.replace('login.html');
+    return false;
+  }
+
+  // Show user email in sidebar
+  const userEl = document.getElementById('user-email');
+  if (userEl) userEl.textContent = session.user.email;
+
   try {
     const { error } = await supabase.from('products').select('id').limit(1);
     if (error) throw error;
@@ -605,16 +617,14 @@ function updateEntryTimestamp() {
 updateEntryTimestamp();
 setInterval(updateEntryTimestamp, 1000);
 
+// ── LOGOUT ────────────────────────────────────────────────────────────────────
+document.getElementById('logout-btn')?.addEventListener('click', async () => {
+  await supabase.auth.signOut();
+  location.replace('login.html');
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
 (async () => {
   const ok = await initSupabase();
   if (ok) loadDashboard();
-  else {
-    setStatus('Not configured', 'error');
-    document.getElementById('stat-total-val').textContent = '—';
-    document.getElementById('stat-low-val').textContent   = '—';
-    document.getElementById('stat-out-val').textContent   = '—';
-    document.getElementById('stat-value-val').textContent = '—';
-    document.getElementById('recent-tbody').innerHTML =
-      '<tr><td colspan="5" class="empty-row">⚙ Go to Settings to connect Supabase.</td></tr>';
-  }
 })();

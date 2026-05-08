@@ -49,9 +49,16 @@
     </nav>
 
     <div class="sidebar-footer">
+      <div class="user-info">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span id="user-email" class="user-email">—</span>
+      </div>
       <div class="connection-status" id="connection-status">
         <span class="status-dot" id="status-dot"></span>
         <span id="status-text">Connecting…</span>
+        <button class="logout-btn" id="logout-btn" title="Sign out">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
     </div>
   </aside>
