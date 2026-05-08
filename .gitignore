@@ -1,5 +1,6 @@
 # ── Credentials ───────────────────
-config.js
+# config.js is committed directly (anon key is public-facing, safe to commit)
+# Real secrets (service role keys) should NEVER be committed
 
 # ── OS junk ───────────────────────
 .DS_Store
