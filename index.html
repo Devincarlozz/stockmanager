@@ -10,6 +10,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="mobile.css" media="(max-width: 768px)" />
+
+  <!-- ⚡ Immediate auth gate — runs synchronously before page renders -->
+  <script>
+    (function () {
+      try {
+        var key = 'sb-ufrvwlhtpcpcciwpskpe-auth-token';
+        var raw = localStorage.getItem(key);
+        var session = raw ? JSON.parse(raw) : null;
+        if (!session || !session.access_token) {
+          window.location.replace('login.html');
+        }
+      } catch (e) {
+        window.location.replace('login.html');
+      }
+    })();
+  </script>
 </head>
 <body>
 
