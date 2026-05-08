@@ -147,11 +147,11 @@
   </div>
 </div>
 
+<script src="config.js"></script>
 <script type="module">
-  import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
 
   // If already logged in, go straight to the app
   const { data: { session } } = await supabase.auth.getSession();

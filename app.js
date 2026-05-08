@@ -1,10 +1,12 @@
 // ── SUPABASE CONFIG ───────────────────────────────────────────────────────────
-// Keys live in config.js which is gitignored — never committed to source control.
-import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
+// Credentials are loaded via <script src="config.js"> in the HTML (not imported).
+// config.js sets window.SUPABASE_URL and window.SUPABASE_KEY
+const SUPABASE_URL = window.SUPABASE_URL;
+const SUPABASE_KEY = window.SUPABASE_KEY;
 
-// Keep settings page fields in sync (for display)
+// Keep settings page fields in sync
 function loadConfig() { return { url: SUPABASE_URL, key: SUPABASE_KEY }; }
-function saveConfig() {}   // no-op; credentials are in config.js
+function saveConfig() {}
 
 // ── SUPABASE CLIENT ───────────────────────────────────────────────────────────
 let supabase = null;
@@ -617,9 +619,9 @@ function updateEntryTimestamp() {
 updateEntryTimestamp();
 setInterval(updateEntryTimestamp, 1000);
 
-// ── LOGOUT ────────────────────────────────────────────────────────────────────
+// ── LOGOUT ───────────────────────────────────────────────────────────────────
 document.getElementById('logout-btn')?.addEventListener('click', async () => {
-  await supabase.auth.signOut();
+  if (supabase) await supabase.auth.signOut();
   location.replace('login.html');
 });
 
