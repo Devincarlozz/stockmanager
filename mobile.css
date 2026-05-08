@@ -1,0 +1,174 @@
+/*
+ * mobile.css — StockIQ
+ * Applied only on screens ≤ 768px via:
+ *   <link rel="stylesheet" href="mobile.css" media="(max-width: 768px)">
+ * No @media wrappers needed — this entire file is mobile-only.
+ */
+
+/* ── LAYOUT ──────────────────────────────────────────── */
+.sidebar     { display: none; }
+.menu-toggle { display: none; }
+.main {
+  margin-left: 0;
+  max-width: 100vw;
+  padding-bottom: 70px; /* space for bottom nav */
+}
+
+/* ── TOPBAR ──────────────────────────────────────────── */
+.topbar       { padding: 0 1rem; }
+.topbar-title { font-size: 1rem; }
+
+/* ── BOTTOM NAVIGATION ───────────────────────────────── */
+.bottom-nav {
+  display: flex;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 62px;
+  background: var(--bg-white);
+  border-top: 1px solid var(--border);
+  z-index: 200;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.bnav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  color: var(--text-3); font-size: .65rem; font-weight: 600;
+  position: relative; padding: 6px 0;
+  transition: color .15s;
+  border: none; background: none; cursor: pointer;
+}
+.bnav-item svg    { width: 22px; height: 22px; }
+.bnav-item.active { color: var(--blue); }
+
+/* Centre "Add" button — raised FAB style */
+.bnav-item[data-view="entry"] { color: transparent; }
+.bnav-item[data-view="entry"] svg {
+  width: 46px; height: 46px;
+  background: var(--blue); border-radius: 50%;
+  color: #fff; padding: 10px;
+  margin-top: -18px;
+  box-shadow: 0 4px 12px rgba(37,99,235,.4);
+}
+.bnav-item[data-view="entry"] span { color: var(--blue); font-size: .65rem; }
+
+.bnav-badge {
+  position: absolute; top: 4px; right: calc(50% - 18px);
+  background: var(--red); color: #fff;
+  font-size: .6rem; font-weight: 700;
+  border-radius: 99px; padding: 1px 5px; min-width: 16px;
+  text-align: center; line-height: 1.4;
+}
+
+/* ── VIEWS ───────────────────────────────────────────── */
+.view { padding: 1rem; gap: 1rem; }
+
+/* ── DASHBOARD ───────────────────────────────────────── */
+.stats-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: .65rem;
+}
+.stat-card  { padding: .9rem 1rem; }
+.stat-value { font-size: 1.3rem; }
+.dash-grid  { grid-template-columns: 1fr; }
+
+/* ── INVENTORY — show cards, hide table ──────────────── */
+#inv-table-wrap { display: none !important; }
+.mobile-cards   { display: flex; }
+
+/* ── MOBILE PRODUCT CARDS ────────────────────────────── */
+.mobile-cards {
+  flex-direction: column; gap: 0;
+}
+.product-card {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-white);
+}
+.product-card:last-child { border-bottom: none; }
+.pc-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: .65rem;
+}
+.pc-name { font-size: .95rem; font-weight: 700; color: var(--text); }
+.pc-meta { font-size: .75rem; color: var(--text-3); margin-top: .15rem; }
+.pc-body {
+  display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+  margin-bottom: .5rem;
+}
+.pc-price { font-size: .95rem; font-weight: 700; color: var(--text); flex: 1; }
+.pc-unit  { font-size: .72rem; color: var(--text-3); font-weight: 400; }
+.pc-btns  { display: flex; gap: .4rem; margin-left: auto; }
+.pc-expiry {
+  font-size: .75rem; color: var(--amber);
+  background: var(--amber-lt); border-radius: 4px;
+  padding: .25rem .55rem; display: inline-block; margin-top: .4rem;
+}
+
+/* ── TOOLBAR ─────────────────────────────────────────── */
+.toolbar         { gap: .5rem; }
+.filter-select   { flex: 1; min-width: 100px; font-size: .8rem; }
+#add-product-btn { white-space: nowrap; padding: .55rem .9rem; font-size: .82rem; }
+
+/* ── FORMS — large touch targets ────────────────────── */
+input[type="text"],
+input[type="number"],
+input[type="url"],
+input[type="date"],
+select,
+textarea {
+  padding: .75rem .85rem;
+  font-size: 1rem;
+  min-height: 48px;
+}
+.form-row { flex-direction: column; }
+.form-row .field.w120,
+.form-row .field.w140,
+.form-row .field.w200 { width: 100%; }
+
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  padding: .8rem 1.25rem;
+  font-size: .95rem;
+  min-height: 48px;
+}
+.form-actions               { flex-direction: column-reverse; }
+.form-actions .btn-primary  { width: 100%; justify-content: center; }
+.form-actions .btn-secondary{ width: 100%; justify-content: center; }
+
+/* ── QTY STEPPER — bigger tap area ──────────────────── */
+.qty-btn { width: 36px; height: 36px; font-size: 1.1rem; }
+.qty-val { min-width: 42px; font-size: .95rem; line-height: 36px; }
+
+/* ── ALERTS ──────────────────────────────────────────── */
+.alert-item   { padding: .75rem; }
+.alert-action { padding: .4rem .85rem; min-height: 36px; }
+
+/* ── MODALS — slide up from bottom ──────────────────── */
+.modal-overlay { align-items: flex-end; }
+.modal {
+  max-width: 100%; width: 100%;
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 1.5rem 1.25rem;
+}
+.modal.wide-modal {
+  max-height: 92vh;
+  border-radius: 16px 16px 0 0;
+}
+
+/* ── ENTRY FORM ──────────────────────────────────────── */
+.simple-form-card { padding: 1.1rem; }
+.entry-timestamp  { width: 100%; }
+
+/* ── TOAST ───────────────────────────────────────────── */
+.toast {
+  bottom: 78px; right: 1rem; left: 1rem;
+  max-width: 100%; text-align: center;
+}
+
+/* ── VERY SMALL SCREENS (≤ 420px) ───────────────────── */
+@media (max-width: 420px) {
+  .stat-icon     { width: 36px; height: 36px; }
+  .stat-icon svg { width: 16px; height: 16px; }
+  .stat-value    { font-size: 1.15rem; }
+  .stat-label    { font-size: .7rem; }
+}

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StockIQ — Supermarket Inventory Manager</title>
+  <meta name="description" content="Professional supermarket stock & inventory data entry system powered by Supabase." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="mobile.css" media="(max-width: 768px)" />
+</head>
+<body>
+
+  <!-- ── SIDEBAR ────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="logo-text">StockIQ</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-view="dashboard" id="nav-dashboard">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-view="entry" id="nav-entry">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Stock Entry</span>
+      </button>
+      <button class="nav-item" data-view="inventory" id="nav-inventory">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Inventory</span>
+      </button>
+      <button class="nav-item" data-view="alerts" id="nav-alerts">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Alerts</span>
+        <span class="badge" id="alert-badge">0</span>
+      </button>
+      <button class="nav-item" data-view="settings" id="nav-settings">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="connection-status" id="connection-status">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">Connecting…</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ───────────────────────────────── -->
+  <main class="main" id="main">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menu-toggle" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <h1 class="topbar-title" id="page-title">Dashboard</h1>
+      <div class="topbar-actions">
+        <span class="topbar-date" id="current-date"></span>
+      </div>
+    </header>
+
+    <!-- ── DASHBOARD VIEW ── -->
+    <section class="view active" id="view-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card" id="stat-total">
+          <div class="stat-icon purple"><svg viewBox="0 0 24 24" fill="none"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 10V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="stat-info"><p class="stat-label">Total Products</p><h2 class="stat-value" id="stat-total-val">—</h2></div>
+        </div>
+        <div class="stat-card" id="stat-low">
+          <div class="stat-icon amber"><svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="stat-info"><p class="stat-label">Low Stock Items</p><h2 class="stat-value" id="stat-low-val">—</h2></div>
+        </div>
+        <div class="stat-card" id="stat-out">
+          <div class="stat-icon red"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="stat-info"><p class="stat-label">Out of Stock</p><h2 class="stat-value" id="stat-out-val">—</h2></div>
+        </div>
+        <div class="stat-card" id="stat-value">
+          <div class="stat-icon green"><svg viewBox="0 0 24 24" fill="none"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="stat-info"><p class="stat-label">Inventory Value</p><h2 class="stat-value" id="stat-value-val">—</h2></div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card recent-entries">
+          <div class="card-header">
+            <h3>Recent Entries</h3>
+            <button class="btn-link" onclick="showView('entry')">+ Add New</button>
+          </div>
+          <div class="table-wrap">
+            <table id="recent-table">
+              <thead><tr><th>Product</th><th>Category</th><th>Qty</th><th>Price</th><th>Updated</th></tr></thead>
+              <tbody id="recent-tbody"><tr><td colspan="5" class="loading-row">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card categories-card">
+          <div class="card-header"><h3>By Category</h3></div>
+          <div id="category-chart" class="cat-chart"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STOCK ENTRY VIEW ── -->
+    <section class="view" id="view-entry">
+      <div class="form-container">
+
+        <!-- Auto-captured timestamp strip -->
+        <div class="entry-timestamp" id="entry-timestamp">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Entry logged at: <strong id="entry-time-display">—</strong>
+        </div>
+
+        <form id="stock-form" novalidate>
+          <div class="simple-form-card">
+
+            <!-- Row 1: Name + SKU -->
+            <div class="form-row">
+              <div class="field grow">
+                <label for="product-name">Product Name <span class="req">*</span></label>
+                <input type="text" id="product-name" placeholder="e.g. Whole Milk 1L" autocomplete="off" required />
+                <span class="error-msg" id="err-name"></span>
+              </div>
+              <div class="field w200">
+                <label for="product-sku">SKU / Barcode</label>
+                <input type="text" id="product-sku" placeholder="Optional" autocomplete="off" />
+              </div>
+            </div>
+
+            <!-- Row 2: Category + Supplier -->
+            <div class="form-row">
+              <div class="field grow">
+                <label for="product-category">Category <span class="req">*</span></label>
+                <select id="product-category" required>
+                  <option value="">— Select —</option>
+                  <option value="dairy">Dairy &amp; Eggs</option>
+                  <option value="produce">Produce &amp; Vegetables</option>
+                  <option value="meat">Meat &amp; Seafood</option>
+                  <option value="bakery">Bakery &amp; Bread</option>
+                  <option value="frozen">Frozen Foods</option>
+                  <option value="beverages">Beverages</option>
+                  <option value="snacks">Snacks &amp; Confectionery</option>
+                  <option value="pantry">Pantry &amp; Canned Goods</option>
+                  <option value="personal_care">Personal Care</option>
+                  <option value="household">Household &amp; Cleaning</option>
+                  <option value="other">Other</option>
+                </select>
+                <span class="error-msg" id="err-cat"></span>
+              </div>
+              <div class="field grow">
+                <label for="supplier-name">Supplier</label>
+                <input type="text" id="supplier-name" placeholder="e.g. FreshFarm Distributors" />
+              </div>
+            </div>
+
+            <!-- Row 3: Qty + Unit + Reorder -->
+            <div class="form-row">
+              <div class="field w120">
+                <label for="quantity">Quantity <span class="req">*</span></label>
+                <input type="number" id="quantity" min="0" step="1" placeholder="0" required />
+                <span class="error-msg" id="err-qty"></span>
+              </div>
+              <div class="field w140">
+                <label for="unit">Unit</label>
+                <select id="unit">
+                  <option value="piece">Piece</option>
+                  <option value="kg">Kilogram (kg)</option>
+                  <option value="g">Gram (g)</option>
+                  <option value="litre">Litre (L)</option>
+                  <option value="ml">Millilitre (mL)</option>
+                  <option value="pack">Pack</option>
+                  <option value="box">Box</option>
+                  <option value="dozen">Dozen</option>
+                </select>
+              </div>
+              <div class="field w140">
+                <label for="reorder-level">Reorder At</label>
+                <input type="number" id="reorder-level" min="0" step="1" placeholder="10" />
+              </div>
+            </div>
+
+            <!-- Row 4: Cost + Sell + Expiry -->
+            <div class="form-row">
+              <div class="field grow">
+                <label for="cost-price">Cost Price (₹) <span class="req">*</span></label>
+                <input type="number" id="cost-price" min="0" step="0.01" placeholder="0.00" required />
+                <span class="error-msg" id="err-cost"></span>
+              </div>
+              <div class="field grow">
+                <label for="sell-price">Selling Price (₹) <span class="req">*</span></label>
+                <input type="number" id="sell-price" min="0" step="0.01" placeholder="0.00" required />
+                <span class="error-msg" id="err-sell"></span>
+              </div>
+              <div class="field grow">
+                <label for="expiry-date">Expiry Date</label>
+                <input type="date" id="expiry-date" />
+              </div>
+            </div>
+
+          </div><!-- /.simple-form-card -->
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="clear-btn">Clear</button>
+            <button type="submit" class="btn-primary" id="submit-btn">
+              <span id="submit-label">Save Entry</span>
+              <span class="spinner hidden" id="submit-spinner"></span>
+            </button>
+          </div>
+        </form>
+
+        <div class="toast hidden" id="toast"></div>
+      </div>
+    </section>
+
+    <!-- ── INVENTORY VIEW ── -->
+    <section class="view" id="view-inventory">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/><path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="text" id="search-input" placeholder="Search products…" />
+        </div>
+        <select id="filter-category" class="filter-select">
+          <option value="">All Categories</option>
+          <option value="dairy">Dairy & Eggs</option>
+          <option value="produce">Produce</option>
+          <option value="meat">Meat & Seafood</option>
+          <option value="bakery">Bakery</option>
+          <option value="frozen">Frozen Foods</option>
+          <option value="beverages">Beverages</option>
+          <option value="snacks">Snacks</option>
+          <option value="pantry">Pantry</option>
+          <option value="personal_care">Personal Care</option>
+          <option value="household">Household</option>
+          <option value="other">Other</option>
+        </select>
+        <select id="filter-status" class="filter-select">
+          <option value="">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="low_stock">Low Stock</option>
+          <option value="out_of_stock">Out of Stock</option>
+        </select>
+        <button class="btn-primary" onclick="showView('entry')" id="add-product-btn">+ Add Product</button>
+      </div>
+
+      <div class="card table-card">
+        <div class="table-wrap" id="inv-table-wrap">
+          <table id="inventory-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Qty</th>
+                <th>Cost</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Expiry</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-tbody">
+              <tr><td colspan="8" class="loading-row">Loading inventory…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mobile-cards hidden" id="mobile-cards"></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </section>
+
+    <!-- ── ALERTS VIEW ── -->
+    <section class="view" id="view-alerts">
+      <div class="alerts-header">
+        <h2>Stock Alerts</h2>
+        <p>Items that need your attention.</p>
+      </div>
+      <div id="alerts-list" class="alerts-list">
+        <div class="loading-row">Loading alerts…</div>
+      </div>
+    </section>
+
+    <!-- ── SETTINGS VIEW ── -->
+    <section class="view" id="view-settings">
+      <div class="form-container">
+        <div class="form-header">
+          <h2>⚙ Settings</h2>
+          <p>Configure your Supabase connection and app preferences.</p>
+        </div>
+        <fieldset>
+          <legend>Supabase Configuration</legend>
+          <div class="form-grid">
+            <div class="field full-width">
+              <label for="sb-url">Supabase Project URL <span class="req">*</span></label>
+              <input type="url" id="sb-url" placeholder="https://xxxxxxxxxxxx.supabase.co" />
+            </div>
+            <div class="field full-width">
+              <label for="sb-key">Supabase Anon Key <span class="req">*</span></label>
+              <input type="text" id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-primary" id="save-config-btn">Save & Connect</button>
+            <button type="button" class="btn-secondary" id="test-conn-btn">Test Connection</button>
+          </div>
+          <div class="config-hint card" style="margin-top:1.5rem;">
+            <h4 style="margin-bottom:.75rem;">📋 Supabase Setup Guide</h4>
+            <ol style="padding-left:1.2rem;line-height:2">
+              <li>Go to <a href="https://supabase.com" target="_blank" rel="noopener">supabase.com</a> and create a free project.</li>
+              <li>In the SQL Editor, run the schema below to create the <code>products</code> table.</li>
+              <li>Copy your <strong>Project URL</strong> and <strong>Anon Key</strong> from <em>Project Settings → API</em>.</li>
+              <li>Paste them above and click <strong>Save &amp; Connect</strong>.</li>
+            </ol>
+            <details style="margin-top:.75rem;">
+              <summary style="cursor:pointer;font-weight:600;">Show SQL Schema</summary>
+              <pre class="sql-block" id="sql-schema"></pre>
+            </details>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay hidden" id="delete-modal">
+    <div class="modal">
+      <h3>Delete Product?</h3>
+      <p>This action cannot be undone. The product will be permanently removed from inventory.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="cancel-delete">Cancel</button>
+        <button class="btn-danger" id="confirm-delete">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal-overlay hidden" id="edit-modal">
+    <div class="modal wide-modal">
+      <div class="modal-header">
+        <h3>Edit Product</h3>
+        <button class="modal-close" id="close-edit-modal">✕</button>
+      </div>
+      <div id="edit-form-body"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="cancel-edit">Cancel</button>
+        <button class="btn-primary" id="confirm-edit">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation (mobile) -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="bnav-item active" data-view="dashboard" id="bnav-dashboard">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="bnav-item" data-view="entry" id="bnav-entry">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>Add</span>
+    </button>
+    <button class="bnav-item" data-view="inventory" id="bnav-inventory">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Stock</span>
+    </button>
+    <button class="bnav-item" data-view="alerts" id="bnav-alerts">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Alerts</span>
+      <span class="bnav-badge hidden" id="bnav-alert-count">0</span>
+    </button>
+    <button class="bnav-item" data-view="settings" id="bnav-settings">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>
+      <span>More</span>
+    </button>
+  </nav>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
